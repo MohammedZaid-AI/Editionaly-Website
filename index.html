@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editionaly – Not Your Boring Newsletter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #a259f7;
+      --accent: #f7b32b;
+      --bg: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      --card-bg: #fff;
+      --card-radius: 20px;
+      --shadow: 0 4px 24px rgba(162,89,247,0.08);
+      --text-main: #222;
+      --text-muted: #666;
+      --cta: #8f43ee;
+      --cta-hover: #a259f7;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 32px 16px 0 16px;
+    }
+    .hero {
+      text-align: center;
+      margin-top: 48px;
+      margin-bottom: 32px;
+    }
+    .hero-title {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+      letter-spacing: -2px;
+    }
+    .hero-sub {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 2.5rem;
+    }
+    .cta-btn {
+      background: var(--cta);
+      color: #fff;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 12px;
+      padding: 18px 36px;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: var(--shadow);
+      margin-bottom: 1.5rem;
+    }
+    .cta-btn:hover {
+      background: var(--cta-hover);
+    }
+    .sample-section {
+      margin: 48px 0 32px 0;
+    }
+    .sample-title {
+      text-align: center;
+      font-size: 2.2rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .sample-desc {
+      text-align: center;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+    }
+    .sample-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 32px;
+      margin-bottom: 2rem;
+    }
+    .sample-card {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.15s;
+    }
+    .sample-card:hover {
+      transform: translateY(-6px) scale(1.03);
+    }
+    .sample-img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      background: #eee;
+    }
+    .sample-content {
+      padding: 18px 16px 12px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .sample-headline {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .sample-summary {
+      color: var(--text-muted);
+      font-size: 0.98rem;
+      flex: 1;
+    }
+    .cta-section {
+      text-align: center;
+      margin: 48px 0 32px 0;
+    }
+    .cta-big {
+      font-size: 1.5rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .cta-desc {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .signup-section {
+      background: var(--card-bg);
+      border-radius: var(--card-radius);
+      box-shadow: var(--shadow);
+      max-width: 400px;
+      margin: 0 auto 48px auto;
+      padding: 32px 24px 24px 24px;
+      text-align: center;
+    }
+    .signup-title {
+      font-size: 1.3rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    .signup-desc {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .signup-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 0.5rem;
+    }
+    .signup-input {
+      padding: 12px 14px;
+      border: 1.5px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border 0.2s;
+    }
+    .signup-input:focus {
+      border: 1.5px solid var(--primary);
+    }
+    .signup-btn {
+      background: var(--primary);
+      color: #fff;
+      font-size: 1.1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 0;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .signup-btn:hover {
+      background: var(--cta-hover);
+    }
+    .footer {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 1rem;
+      margin: 48px 0 16px 0;
+    }
+    .footer .brand {
+      color: var(--primary);
+      font-weight: 900;
+      font-size: 1.2rem;
+      letter-spacing: -1px;
+    }
+    .footer .emoji {
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+    @media (max-width: 600px) {
+      .hero-title { font-size: 2.1rem; }
+      .sample-title { font-size: 1.3rem; }
+      .cta-big { font-size: 1.1rem; }
+      .signup-section { padding: 18px 6px; }
+      .container { padding: 12px 4px 0 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-title">Editionaly</div>
+      <div class="hero-sub">Your Gen Z Newsletter </div>
+      <div class="hero-desc">All the tech and trends you care about, minus the yawn factor <span class="emoji"></span></div>
+      <button class="cta-btn" onclick="document.getElementById('signup').scrollIntoView({behavior: 'smooth'})">Get Started for ₹5/month </button>
+    </section>
+
+    <!-- Sample Issues Section -->
+    <section class="sample-section">
+      <div class="sample-title">Sample Issues <span class="emoji">📰</span></div>
+      <div class="sample-desc">Check out these actual newsletter pdf! This is the kind of content you'll get in your inbox every day <span class="emoji">📬</span></div>
+      <div class="sample-gallery">
+        <!-- Sample Card 1 -->
+        <div class="sample-card">
+          <img src="assets/sample1.png" alt="Sample 1" class="sample-img">
+          <div class="sample-content">
+            <div class="sample-headline">BSNL inks pact with Numaligarh Refinery to deploy private 5G network</div>
+            <div class="sample-summary">BSNL and NRL partnered to deploy a private 5G network, improving secure and reliable connectivity.</div>
+          </div>
+        </div>
+        <!-- Sample Card 2 -->
+        <div class="sample-card">
+          <img src="assets/sample2.png" alt="Sample 2" class="sample-img">
+          <div class="sample-content">
+            <div class="sample-headline">UB summer externship program treats college sophomores as full-time employees</div>
+            <div class="sample-summary">Hadar Borden, the program director, stressed the importance of real-world experience for students.</div>
+          </div>
+        </div>
+        <!-- Sample Card 3 -->
+        <div class="sample-card">
+          <img src="assets/sample3.png" alt="Sample 3" class="sample-img">
+          <div class="sample-content">
+            <div class="sample-headline">Gemini, ChatGPT Achieve Gold Medal-Level Scores in International Math Olympiad</div>
+            <div class="sample-summary">Both Google's Gemini and OpenAI's model achieved gold-medal level scores at the IMO.</div>
+          </div>
+        </div>
+        <!-- Sample Card 4 -->
+        <div class="sample-card">
+          <img src="assets/sample4.png" alt="Sample 4" class="sample-img">
+          <div class="sample-content">
+            <div class="sample-headline">Rakhi Ready: Your Go-To Gifting Guide For Rakshabandhan 2025</div>
+            <div class="sample-summary">Meaningful and stylish gifts are ideal for celebrating Rakshabandhan in 2025.</div>
+          </div>
+        </div>
+        <!-- Sample Card 5 -->
+        <div class="sample-card">
+          <img src="assets/sample5.png" alt="Sample 5" class="sample-img">
+          <div class="sample-content">
+            <div class="sample-headline">Amazon invests in 'Netflix of AI' startup that lets you make your own shows</div>
+            <div class="sample-summary">Fable Studio, the creators of an AI-generated "South Park" parody, has received an undisclosed investment from Amazon to develop Showrunner.</div>
+          </div>
+        </div>
+        <!-- Sample Card 6 -->
+        <div class="sample-card">
+          <img src="assets/sample6.png" alt="Sample 6" class="sample-img">
+          <div class="sample-content">
+            <div class="sample-headline">Chromebook Users Hit by Vanishing Google Play Store and Android Apps</div>
+            <div class="sample-summary">Chromebook users are experiencing issues with the Google Play Store and Android apps disappearing after updates.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-big">Want more of this in your inbox? <span class="emoji"></span></div>
+      <div class="cta-desc">Get weekly doses of tech news, career tips, and lifestyle content that actually matter to Gen Z <span class="emoji"></span></div>
+      <button class="cta-btn" onclick="document.getElementById('signup').scrollIntoView({behavior: 'smooth'})">Subscribe for ₹5/month ⚡</button>
+    </section>
+
+    <!-- Sign-up Section -->
+    <section class="signup-section" id="signup">
+      <div class="signup-title">Join the Squad! <span class="emoji">🚀</span></div>
+      <div class="signup-desc">Subscribe now and get exclusive Gen Z content delivered weekly for just ₹5/month</div>
+      <form class="signup-form" id="signupForm">
+        <input class="signup-input" type="text" name="name" placeholder="Name (Optional) ">
+        <input class="signup-input" type="email" name="email" placeholder="Email Address " required>
+        <button class="signup-btn" type="submit">Subscribe for ₹5/month 🔄</button>
+      </form>
+      <div id="signupMsg" style="margin-top:10px;font-size:1rem;"></div>
+      <div style="margin-top:10px;font-size:0.95rem;color:var(--text-muted);">
+        <span class="emoji"></span> Secure UPI AutoPay • Cancel anytime • No hidden fees
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="brand">Editionaly</div>
+      <div>Not Your Boring Newsletter <span class="emoji">📰</span></div>
+      <div style="margin-top:8px;">Made By Gen Z  for Gen Z • Questions? Hit us up! at editionaly4u@gmail.com</div>
+    </footer>
+  </div>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    document.getElementById('signupForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      var name = document.querySelector('input[name="name"]').value;
+      var email = document.querySelector('input[name="email"]').value;
+      var signupMsg = document.getElementById('signupMsg');
+      signupMsg.textContent = 'Processing...';
+
+      // Create subscription on backend (for Razorpay)
+      try {
+        const res = await fetch('http://localhost:3001/create-subscription', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email })
+        });
+        const data = await res.json();
+        if (!data.subscription_id) {
+          signupMsg.textContent = 'Error: ' + (data.error || 'Could not create subscription.');
+          return;
+        }
+
+        console.log('Subscription created:', data.subscription_id);
+        signupMsg.textContent = 'Processing... Opening payment...';
+
+        // Open Razorpay Checkout with subscription_id
+        var options = {
+          key: 'rzp_test_enWk0oF6EDV5vn',
+          name: 'Editionaly',
+          description: 'Gen Z Newsletter Subscription',
+          handler: function (response){
+            // Payment successful
+            signupMsg.textContent = '🎉 Payment successful! You are now subscribed.';
+          },
+          prefill: { name, email },
+          theme: { color: '#a259f7' },
+          subscription_id: data.subscription_id,
+          notes: { plan: 'Gen Z Newsletter', email: email },
+          modal: {
+            ondismiss: function(){
+              signupMsg.textContent = 'Payment popup closed. Try again to subscribe.';
+            }
+          }
+        };
+        var rzp = new Razorpay(options);
+        rzp.open();
+      } catch (err) {
+        console.error('❌ Main error:', err);
+        signupMsg.textContent = 'Error: ' + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
