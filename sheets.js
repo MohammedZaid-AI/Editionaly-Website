@@ -1,9 +1,5 @@
 const { google } = require('googleapis');
 const credentials = require('./credentials.json');
-require('dotenv').config(); 
-// Load environment variables
-const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
-const SHEET_NAME = process.env.GOOGLE_SHEET_NAME;
 
 // Configure the JWT client for authentication
 const auth = new google.auth.GoogleAuth({
@@ -15,15 +11,17 @@ const sheets = google.sheets({ version: 'v4', auth });
 
 /**
  * Adds a new row to the Google Sheet with subscriber data.
+ * @param {string} spreadsheetId The spreadsheet ID.
+ * @param {string} sheetName The name of the sheet.
  * @param {string} name - The subscriber's name.
  * @param {string} email - The subscriber's email.
  * @param {string} subscription_id - The Razorpay subscription ID.
  */
-async function addRow(name, email, subscription_id) {
+async function addRow(spreadsheetId, sheetName, name, email, subscription_id) {
   try {
     const res = await sheets.spreadsheets.values.append({
-      spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!A:C`, // Assumes columns are Name, Email, Subscription ID
+      spreadsheetId: spreadsheetId,
+      range: `${sheetName}!A:C`, // Assumes columns are Name, Email, Subscription ID
       valueInputOption: 'USER_ENTERED',
       resource: {
         values: [[name, email, subscription_id]],
@@ -39,14 +37,16 @@ async function addRow(name, email, subscription_id) {
 
 /**
  * Removes a row from the Google Sheet based on the subscription ID.
+ * @param {string} spreadsheetId The spreadsheet ID.
+ * @param {string} sheetName The name of the sheet.
  * @param {string} subscription_id - The Razorpay subscription ID to find and remove.
  */
-async function removeRow(subscription_id) {
+async function removeRow(spreadsheetId, sheetName, subscription_id) {
   try {
     // Get all the data from the sheet to find the row number
     const getRowsRes = await sheets.spreadsheets.values.get({
-      spreadsheetId: SPREADSHEET_ID,
-      range: `${SHEET_NAME}!C:C`, // Assuming Subscription ID is in column C
+      spreadsheetId: spreadsheetId,
+      range: `${sheetName}!C:C`, // Assuming Subscription ID is in column C
     });
 
     const rows = getRowsRes.data.values;
@@ -67,9 +67,9 @@ async function removeRow(subscription_id) {
 
     // Clear the contents of the entire row
     await sheets.spreadsheets.values.clear({
-        spreadsheetId: SPREADSHEET_ID,
+        spreadsheetId: spreadsheetId,
         // Assuming you want to clear from column A to C for the found row
-        range: `${SHEET_NAME}!A${rowToClear}:C${rowToClear}`,
+        range: `${sheetName}!A${rowToClear}:C${rowToClear}`,
     });
 
     console.log(`Row for subscription ${subscription_id} cleared successfully.`);
