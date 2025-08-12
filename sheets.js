@@ -1,6 +1,6 @@
 const { google } = require('googleapis');
 const credentials = require('./credentials.json');
-
+require('dotenv').config(); 
 // Load environment variables
 const SPREADSHEET_ID = process.env.GOOGLE_SHEET_ID;
 const SHEET_NAME = process.env.GOOGLE_SHEET_NAME;
