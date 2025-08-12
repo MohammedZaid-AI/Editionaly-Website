@@ -60,7 +60,7 @@ app.post('/razorpay-webhook', async (req, res) => {
 
       // Add subscriber to Google Sheets on successful payment
       try {
-        await addRow(name, email, subscription_id);
+        await addRow(process.env.GOOGLE_SHEET_ID, process.env.GOOGLE_SHEET_NAME, name, email, subscription_id);
       } catch (sheetError) {
         console.error('Failed to add to Google Sheets:', sheetError.message);
       }
@@ -72,7 +72,7 @@ app.post('/razorpay-webhook', async (req, res) => {
       
       // Remove subscriber from Google Sheets
       try {
-        await removeRow(subscription_id);
+        await removeRow(process.env.GOOGLE_SHEET_ID, process.env.GOOGLE_SHEET_NAME, subscription_id);
       } catch (sheetError) {
         console.error('Failed to remove from Google Sheets:', sheetError.message);
         // Log the error, as the webhook must return 200 OK
