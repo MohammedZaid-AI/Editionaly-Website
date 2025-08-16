@@ -1,10 +1,11 @@
+require('dotenv').config(); 
+
 const express = require('express');
 const Razorpay = require('razorpay');
 const cors = require('cors');
 const path = require('path');
 const { addRow, removeRow } = require('./sheets.js');
 
-require('dotenv').config(); // Load environment variables
 
 const app = express();
 app.use(cors());
