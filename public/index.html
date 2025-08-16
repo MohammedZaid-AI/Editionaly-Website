@@ -316,7 +316,7 @@
 
       // Create subscription on backend (for Razorpay)
       try {
-        const res = await fetch('http://localhost:3001/create-subscription', {
+        const res = await fetch('/create-subscription', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ name, email })

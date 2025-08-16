@@ -1,5 +1,5 @@
 const { google } = require('googleapis');
-const credentials = require('./credentials.json');
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS);
 
 // Configure the JWT client for authentication
 const auth = new google.auth.GoogleAuth({
