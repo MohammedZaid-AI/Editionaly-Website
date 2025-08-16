@@ -8,7 +8,11 @@ const { addRow, removeRow } = require('./sheets.js');
 
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: ["https://www.editionaly.website"],
+  methods: ["GET", "POST"],
+  credentials: true
+}));
 app.use(express.json()); // ✅ only this
 
 
