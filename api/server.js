@@ -8,11 +8,24 @@ const { addRow, removeRow } = require('./sheets.js');
 
 
 const app = express();
+
+const allowedOrigins = [
+  "https://www.editionaly.website",
+  "https://editionaly-website-1jwo1wcfp-mohammed-zaids-projects-8ec0dbe5.vercel.app"
+];
+
 app.use(cors({
-  origin: ["https://www.editionaly.website"],
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   methods: ["GET", "POST"],
   credentials: true
 }));
+
 app.use(express.json()); // ✅ only this
 
 
@@ -22,6 +35,10 @@ app.use(express.static(path.join(__dirname, '/')));
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
   key_secret: process.env.RAZORPAY_KEY_SECRET
+});
+
+app.get('/get-razorpay-key', (req, res) => {
+  res.json({ key_id: process.env.RAZORPAY_KEY_ID });
 });
 
 // Get plan_id from environment variables
