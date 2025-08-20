@@ -4,7 +4,7 @@ const express = require('express');
 const Razorpay = require('razorpay');
 const cors = require('cors');
 const path = require('path');
-const { addRow, removeRow } = require('./sheets.js');
+const { addRow, removeRow, updateRow, removeExpiredCancellations } = require('./sheets.js');
 
 
 const app = express();
@@ -76,8 +76,11 @@ app.post('/razorpay-webhook', async (req, res) => {
     console.log('Webhook received:', event.event);
 
     if (event.event === 'subscription.charged') {
-      const { name, email } = event.payload.subscription.entity.notes;
-      const subscription_id = event.payload.subscription.entity.id;
+      const { subscription } = event.payload;
+      console.log('Subscription entity:', JSON.stringify(subscription.entity, null, 2));
+
+      const { name, email } = subscription.entity.notes;
+      const subscription_id = subscription.entity.id;
       console.log('Subscription payment successful:', { name, email, subscription_id });
 
       // Add subscriber to Google Sheets on successful payment
@@ -92,12 +95,12 @@ app.post('/razorpay-webhook', async (req, res) => {
       const subscription_id = event.payload.subscription.entity.id;
       console.log('Subscription cancelled:', subscription_id);
       
-      // Remove subscriber from Google Sheets
+      const cancellation_date = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+
       try {
-        await removeRow(process.env.GOOGLE_SHEET_ID, process.env.GOOGLE_SHEET_NAME, subscription_id);
+        await updateRow(process.env.GOOGLE_SHEET_ID, process.env.GOOGLE_SHEET_NAME, subscription_id, cancellation_date);
       } catch (sheetError) {
-        console.error('Failed to remove from Google Sheets:', sheetError.message);
-        // Log the error, as the webhook must return 200 OK
+        console.error('Failed to update Google Sheets for cancellation:', sheetError.message);
       }
     }
 
@@ -107,6 +110,18 @@ app.post('/razorpay-webhook', async (req, res) => {
     res.status(500).send('error');
     
   }
+});
+
+app.post('/api/cleanup-subscriptions', async (req, res) => {
+    try {
+        console.log('Cleanup process started...');
+        await removeExpiredCancellations(process.env.GOOGLE_SHEET_ID, process.env.GOOGLE_SHEET_NAME);
+        console.log('Cleanup process finished.');
+        res.status(200).send('Cleanup finished');
+    } catch (err) {
+        console.error('Error during cleanup:', err.message);
+        res.status(500).send('Error during cleanup');
+    }
 });
 
 module.exports = app;
