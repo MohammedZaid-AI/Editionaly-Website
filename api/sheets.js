@@ -35,6 +35,90 @@ async function addRow(spreadsheetId, sheetName, name, email, subscription_id) {
   }
 }
 
+async function updateRow(spreadsheetId, sheetName, subscription_id, cancellation_date) {
+    try {
+        const getRowsRes = await sheets.spreadsheets.values.get({
+            spreadsheetId: spreadsheetId,
+            range: `${sheetName}!C:C`,
+        });
+
+        const rows = getRowsRes.data.values;
+        if (!rows || rows.length === 0) {
+            console.log('No data found in the sheet to update.');
+            return;
+        }
+
+        const rowIndex = rows.findIndex(row => row[0] === subscription_id);
+
+        if (rowIndex === -1) {
+            console.log(`Subscription ID ${subscription_id} not found for update.`);
+            return;
+        }
+
+        const rowToUpdate = rowIndex + 1;
+
+        await sheets.spreadsheets.values.update({
+            spreadsheetId: spreadsheetId,
+            range: `${sheetName}!D${rowToUpdate}`,
+            valueInputOption: 'USER_ENTERED',
+            resource: {
+                values: [[cancellation_date]],
+            },
+        });
+
+        console.log(`Row for subscription ${subscription_id} updated with cancellation date.`);
+
+    } catch (err) {
+        console.error('Error updating Google Sheets:', err.message);
+        throw new Error('Could not update data in Google Sheet.');
+    }
+}
+
+async function removeExpiredCancellations(spreadsheetId, sheetName) {
+    try {
+        const getRowsRes = await sheets.spreadsheets.values.get({
+            spreadsheetId: spreadsheetId,
+            range: `${sheetName}!C:D`, // Get subscription_id and cancellation_date
+        });
+
+        const rows = getRowsRes.data.values;
+        if (!rows || rows.length === 0) {
+            console.log('No data found in the sheet for cleanup.');
+            return;
+        }
+
+        const thirtyDaysAgo = new Date();
+        thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+        const subsToRemove = [];
+        for (const row of rows) {
+            const subscription_id = row[0];
+            const cancellation_date_str = row[1];
+
+            if (cancellation_date_str) {
+                const cancellation_date = new Date(cancellation_date_str);
+                if (cancellation_date < thirtyDaysAgo) {
+                    subsToRemove.push(subscription_id);
+                }
+            }
+        }
+
+        if (subsToRemove.length > 0) {
+            console.log(`Found ${subsToRemove.length} expired subscriptions to remove.`);
+            for (const sub_id of subsToRemove) {
+                await removeRow(spreadsheetId, sheetName, sub_id);
+            }
+            console.log('Expired subscriptions removed successfully.');
+        } else {
+            console.log('No expired subscriptions found.');
+        }
+
+    } catch (err) {
+        console.error('Error during expired cancellation removal:', err.message);
+        throw new Error('Could not remove expired cancellations from Google Sheet.');
+    }
+}
+
 /**
  * Removes a row from the Google Sheet based on the subscription ID.
  * @param {string} spreadsheetId The spreadsheet ID.
@@ -94,4 +178,9 @@ async function getSheetId(sheetName) {
   return sheet.properties.sheetId;
 }
 
-module.exports = { addRow, removeRow };
+module.exports = {
+  addRow,
+  removeRow,
+  updateRow,
+  removeExpiredCancellations
+};
